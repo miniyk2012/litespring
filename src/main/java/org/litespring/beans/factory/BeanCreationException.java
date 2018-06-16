@@ -2,6 +2,9 @@ package org.litespring.beans.factory;
 
 import org.litespring.beans.BeansException;
 
+/**
+ * @author thomas_young
+ */
 public class BeanCreationException extends BeansException {
 	private String beanName;
 	public BeanCreationException(String msg) {
