@@ -2,6 +2,15 @@ package org.litespring.beans;
 
 public interface BeanDefinition {
 
-	String getBeanClassName();
+    String SCOPE_DEFAULT = "";
+    String SCOPE_SINGLETON = "singleton";
+    String SCOPE_PROTOTYPE = "prototype";
 
+    String getBeanClassName();
+
+    boolean isSingleton();
+
+    boolean isPrototype();
+
+    String getScope();
 }
