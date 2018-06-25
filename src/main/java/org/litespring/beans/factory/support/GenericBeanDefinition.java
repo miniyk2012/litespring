@@ -1,6 +1,9 @@
 package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.PropertyValue;
+
+import java.util.List;
 
 public class GenericBeanDefinition implements BeanDefinition {
 	private String id;
@@ -8,6 +11,9 @@ public class GenericBeanDefinition implements BeanDefinition {
 	private boolean singleton = true;
 	private boolean prototype = false;
 	private String scope = SCOPE_DEFAULT;
+
+	private List<PropertyValue> propertyValues;
+
 	public GenericBeanDefinition(String id, String beanClassName) {
 		
 		this.id = id;
@@ -17,7 +23,15 @@ public class GenericBeanDefinition implements BeanDefinition {
 		
 		return this.beanClassName;
 	}
-	
+
+	public void setPropertyValues(List<PropertyValue> propertyValues) {
+		this.propertyValues = propertyValues;
+	}
+
+	public List<PropertyValue> getPropertyValues() {
+		return propertyValues;
+	}
+
 	public boolean isSingleton() {
 		return this.singleton;
 	}
