@@ -39,4 +39,16 @@ public class ApplicationContextTestV2 {
         Assert.assertEquals("PetStoreService{accountDao=org.litespring.dao.v2.AccountDao," +
                 " itemDao=org.litespring.dao.v2.ItemDao, owner='liuxin', version=2}\n", log.getLog());
     }
+    @Test
+    public void testGetBeanPropertySingleton() {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("petstore-v2.xml");
+        PetStoreService petStoreService = (PetStoreService)ctx.getBean("petStore");
+
+        AccountDao accountDao = petStoreService.getAccountDao();
+        Assert.assertNotNull(accountDao);
+        Assert.assertTrue(accountDao instanceof AccountDao);
+        // petStoreService设置的ref就是实例accountDao
+        Assert.assertSame(accountDao, petStoreService.getAccountDao());
+    }
+
 }

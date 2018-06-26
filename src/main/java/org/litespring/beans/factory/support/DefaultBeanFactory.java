@@ -79,12 +79,14 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     private void setOneField(Object bean, PropertyValue propertyValue, BeanDefinitionValueResolver resolver, TypeConverter converter) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] proDescrtptors=beanInfo.getPropertyDescriptors();
+            PropertyDescriptor[] proDescrtptors = beanInfo.getPropertyDescriptors();
             if(proDescrtptors != null && proDescrtptors.length > 0){
                 boolean setSuccess = false;
-                for(PropertyDescriptor propDesc:proDescrtptors){
+                for(PropertyDescriptor propDesc: proDescrtptors){
                     if(propDesc.getName().equals(propertyValue.getName())){
                         Method setMethod = propDesc.getWriteMethod();
+                        // resolveValueIfNecessary中使用了factory.getBean方法，保证了即使ref指向的实例之前还没有创建出来，
+                        // 也会在此时创建出来，并放在factory当中，也保证了ref指向的是唯一的实例
                         Object value = resolver.resolveValueIfNecessary(propertyValue.getValue());
                         setMethod.invoke(bean, converter.convertIfNecessary(value, propDesc.getPropertyType()));
                         setSuccess = true;
