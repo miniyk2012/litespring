@@ -33,4 +33,15 @@ public class PetStoreService {
     public void setItemDao(ItemDao itemDao) {
         this.itemDao = itemDao;
     }
+
+
+    @Override
+    public String toString() {
+        return "PetStoreService{" +
+                "accountDao=" + accountDao.getClass().getName() +
+                ", itemDao=" + itemDao.getClass().getName() +
+                ", owner='" + owner + '\'' +
+                ", version=" + version +
+                '}';
+    }
 }

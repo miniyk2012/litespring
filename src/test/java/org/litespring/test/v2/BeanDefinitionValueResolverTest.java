@@ -33,9 +33,7 @@ public class BeanDefinitionValueResolverTest {
     @Test
     public void testResolveRuntimeBeanReference() {
         RuntimeBeanReference reference = new RuntimeBeanReference("accountDao");
-
         Object value = resolver.resolveValueIfNecessary(reference);
-
         Assert.assertNotNull(value);
         Assert.assertTrue(value instanceof AccountDao);
     }
@@ -49,6 +47,5 @@ public class BeanDefinitionValueResolverTest {
         Assert.assertTrue(convertedValue instanceof String);
         Assert.assertEquals("liuxin", convertedValue);
     }
-
 
 }

@@ -12,7 +12,6 @@ public class BeanDefinitionValueResolver {
 
     public BeanDefinitionValueResolver(BeanFactory factory) {
         this.factory = factory;
-
     }
 
     public Object resolveValueIfNecessary(Object value) {
