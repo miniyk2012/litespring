@@ -31,8 +31,12 @@ public class ApplicationContextTestV2 {
         Assert.assertTrue(accountDao instanceof AccountDao);
         Assert.assertTrue(itemDao instanceof ItemDao);
 
+
+        Assert.assertEquals("liuxin",petStoreService.getOwner());
+        Assert.assertEquals(2, petStoreService.getVersion());
+
         System.out.println(petStoreService);
         Assert.assertEquals("PetStoreService{accountDao=org.litespring.dao.v2.AccountDao," +
-                " itemDao=org.litespring.dao.v2.ItemDao, owner='liuxin', version=0}\n", log.getLog());
+                " itemDao=org.litespring.dao.v2.ItemDao, owner='liuxin', version=2}\n", log.getLog());
     }
 }

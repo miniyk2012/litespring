@@ -1,7 +1,9 @@
 package org.litespring.beans.factory.support;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
+import org.litespring.beans.SimpleTypeConverter;
+import org.litespring.beans.TypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
@@ -58,9 +62,10 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      */
     private void setterInject(Object bean, BeanDefinition bd) {
         List<PropertyValue> propertyValues = bd.getPropertyValues();
+        TypeConverter converter = new SimpleTypeConverter();
+        BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
         for (PropertyValue propertyValue: propertyValues) {
-            BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
-            setOneField(bean, propertyValue, resolver);
+            setOneField(bean, propertyValue, resolver, converter);
         }
     }
 
@@ -69,8 +74,9 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @param bean
      * @param propertyValue
      * @param resolver
+     * @param converter
      */
-    private void setOneField(Object bean, PropertyValue propertyValue, BeanDefinitionValueResolver resolver) {
+    private void setOneField(Object bean, PropertyValue propertyValue, BeanDefinitionValueResolver resolver, TypeConverter converter) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
             PropertyDescriptor[] proDescrtptors=beanInfo.getPropertyDescriptors();
@@ -80,17 +86,17 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                     if(propDesc.getName().equals(propertyValue.getName())){
                         Method setMethod = propDesc.getWriteMethod();
                         Object value = resolver.resolveValueIfNecessary(propertyValue.getValue());
-                        setMethod.invoke(bean, value);
+                        setMethod.invoke(bean, converter.convertIfNecessary(value, propDesc.getPropertyType()));
                         setSuccess = true;
                         break;
                     }
                 }
                 if (!setSuccess) {
-                    throw new BeanCreationException("set field for "+ bean.getClass().getName() + ". " + propertyValue.getName() +" failed");
+                    throw new BeanCreationException("set field for "+ bean.getClass().getName() + "." + propertyValue.getName() +" failed");
                 }
             }
-        } catch (Exception e) {
-            throw new BeanCreationException("set field for "+ bean.getClass().getName() + "." + propertyValue.getName() +" failed", e);
+        } catch (IllegalAccessException | IntrospectionException | InvocationTargetException e) {
+            throw new BeanCreationException("set field for "+ bean.getClass().getName() + "." + propertyValue.getName() + " failed", e);
         }
     }
 
