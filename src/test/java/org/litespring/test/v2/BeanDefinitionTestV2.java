@@ -52,6 +52,14 @@ public class BeanDefinitionTestV2 {
             Assert.assertTrue(pv.getValue() instanceof TypedStringValue);
         }
 
+        {
+            PropertyValue pv = this.getPropertyValue("version", pvs);
+
+            Assert.assertNotNull(pv);
+
+            Assert.assertTrue(pv.getValue() instanceof TypedStringValue);
+        }
+
     }
 
     private PropertyValue getPropertyValue(String name,List<PropertyValue> pvs){

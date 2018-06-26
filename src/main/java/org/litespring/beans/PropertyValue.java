@@ -7,6 +7,21 @@ package org.litespring.beans;
 public class PropertyValue {
     private String name;
     private Object value;
+    private Object convertedValue;
+    private boolean isConverted;
+
+    public Object getConvertedValue() {
+        return convertedValue;
+    }
+
+    public void setConvertedValue(Object convertedValue) {
+        this.convertedValue = true;
+        this.convertedValue = convertedValue;
+    }
+
+    public boolean isConverted() {
+        return isConverted;
+    }
 
     public Object getValue() {
         return value;
