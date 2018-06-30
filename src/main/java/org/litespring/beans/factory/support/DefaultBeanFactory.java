@@ -16,6 +16,8 @@ import org.litespring.beans.TypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
+import org.apache.commons.beanutils.BeanUtils;
+
 import java.beans.Introspector;
 
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry 
@@ -60,13 +62,28 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @param bean
      * @param bd
      */
-    private void setterInject(Object bean, BeanDefinition bd) {
+    private void populateBean(Object bean, BeanDefinition bd) {
         List<PropertyValue> propertyValues = bd.getPropertyValues();
         TypeConverter converter = new SimpleTypeConverter();
         BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
         for (PropertyValue propertyValue: propertyValues) {
             setOneField(bean, propertyValue, resolver, converter);
         }
+    }
+
+    private void populateBeanUseCommonBeanUtils(Object bean, BeanDefinition bd) {
+        List<PropertyValue> propertyValues = bd.getPropertyValues();
+        BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
+        try {
+            for (PropertyValue propertyValue : propertyValues) {
+                Object resolvedValue = resolver.resolveValueIfNecessary(propertyValue.getValue());
+                String propertyName = propertyValue.getName();
+                BeanUtils.setProperty(bean, propertyName, resolvedValue);
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new BeanCreationException("set field for "+ bean.getClass().getName() + " failed", e);
+        }
+
     }
 
     /**
@@ -104,7 +121,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 
     private Object createBean(BeanDefinition bd) {
         Object bean =  instantiateBean(bd);
-        setterInject(bean, bd);
+//        populateBeanUseCommonBeanUtils(bean, bd);
+        populateBean(bean, bd);
         return bean;
 	}
 
