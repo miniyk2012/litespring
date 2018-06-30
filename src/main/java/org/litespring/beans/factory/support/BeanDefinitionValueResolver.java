@@ -8,7 +8,7 @@ import org.litespring.beans.factory.config.TypedStringValue;
  * Created by thomas_young on 26/6/2018.
  */
 public class BeanDefinitionValueResolver {
-    private BeanFactory factory;
+    private final BeanFactory factory;
 
     public BeanDefinitionValueResolver(BeanFactory factory) {
         this.factory = factory;
@@ -20,6 +20,7 @@ public class BeanDefinitionValueResolver {
         } else if (value instanceof TypedStringValue) {
             return ((TypedStringValue) value).getValue();
         } else {
+            // TODO array, map ...
             throw new RuntimeException("the value " + value +" has not implemented");
         }
     }
