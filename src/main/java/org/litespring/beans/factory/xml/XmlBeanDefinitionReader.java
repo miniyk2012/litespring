@@ -13,6 +13,8 @@ import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
+import org.litespring.beans.factory.config.RuntimeBeanReferencePropertyValue;
+import org.litespring.beans.factory.config.TypedStringPropertyValue;
 import org.litespring.beans.factory.config.TypedStringValue;
 import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.GenericBeanDefinition;
@@ -84,18 +86,15 @@ public class XmlBeanDefinitionReader {
             String name = property.attributeValue(NAME_ATTRIBUTE);
             String ref = property.attributeValue(REF_ATTRIBUTE);
             String value = property.attributeValue(VALUE_ATTRIBUTE);
-            PropertyValue propertyValue = new PropertyValue();
-            propertyValue.setName(name);
+            PropertyValue propertyValue;
             if (!StringUtils.hasLength(name)) {
                 logger.fatal("Tag 'property' must have a 'name' attribute");
                 return;
             }
             if (ref != null && !"".equals(ref)) {
-                RuntimeBeanReference runtimeBeanReference = new RuntimeBeanReference(ref);
-                propertyValue.setValue(runtimeBeanReference);
+                propertyValue = new RuntimeBeanReferencePropertyValue(name, ref);
             } else if (value != null && !"".equals(value)) {
-                TypedStringValue typedStringValue = new TypedStringValue(value);
-                propertyValue.setValue(typedStringValue);
+                propertyValue = new TypedStringPropertyValue(name, value);
             } else {
                 throw new RuntimeException(name + " must specify a ref or value");
             }

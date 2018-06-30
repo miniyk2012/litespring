@@ -65,18 +65,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     private void populateBean(Object bean, BeanDefinition bd) {
         List<PropertyValue> propertyValues = bd.getPropertyValues();
         TypeConverter converter = new SimpleTypeConverter();
-        BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
         for (PropertyValue propertyValue: propertyValues) {
-            setOneField(bean, propertyValue, resolver, converter);
+            setOneField(bean, propertyValue, converter);
         }
     }
 
     private void populateBeanUseCommonBeanUtils(Object bean, BeanDefinition bd) {
         List<PropertyValue> propertyValues = bd.getPropertyValues();
-        BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
         try {
             for (PropertyValue propertyValue : propertyValues) {
-                Object resolvedValue = resolver.resolveValueIfNecessary(propertyValue.getValue());
+                Object resolvedValue = propertyValue.resolve(this);
                 String propertyName = propertyValue.getName();
                 BeanUtils.setProperty(bean, propertyName, resolvedValue);
             }
@@ -90,10 +88,9 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * 对一个field做set
      * @param bean
      * @param propertyValue
-     * @param resolver
      * @param converter
      */
-    private void setOneField(Object bean, PropertyValue propertyValue, BeanDefinitionValueResolver resolver, TypeConverter converter) {
+    private void setOneField(Object bean, PropertyValue propertyValue, TypeConverter converter) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
             PropertyDescriptor[] proDescrtptors = beanInfo.getPropertyDescriptors();
@@ -104,7 +101,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                         Method setMethod = propDesc.getWriteMethod();
                         // resolveValueIfNecessary中使用了factory.getBean方法，保证了即使ref指向的实例之前还没有创建出来，
                         // 也会在此时创建出来，并放在factory当中，也保证了ref指向的是唯一的实例
-                        Object value = resolver.resolveValueIfNecessary(propertyValue.getValue());
+                        Object value = propertyValue.resolve(this);
                         setMethod.invoke(bean, converter.convertIfNecessary(value, propDesc.getPropertyType()));
                         setSuccess = true;
                         break;
@@ -121,8 +118,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 
     private Object createBean(BeanDefinition bd) {
         Object bean =  instantiateBean(bd);
-//        populateBeanUseCommonBeanUtils(bean, bd);
-        populateBean(bean, bd);
+        populateBeanUseCommonBeanUtils(bean, bd);
+//        populateBean(bean, bd);
         return bean;
 	}
 

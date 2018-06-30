@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
+import org.litespring.beans.factory.config.RuntimeBeanReferencePropertyValue;
+import org.litespring.beans.factory.config.TypedStringPropertyValue;
 import org.litespring.beans.factory.config.TypedStringValue;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
 import org.litespring.beans.factory.xml.XmlBeanDefinitionReader;
@@ -33,7 +35,7 @@ public class BeanDefinitionTestV2 {
 
             Assert.assertNotNull(pv);
 
-            Assert.assertTrue(pv.getValue() instanceof RuntimeBeanReference);
+            Assert.assertTrue(pv instanceof RuntimeBeanReferencePropertyValue);
         }
 
         {
@@ -41,7 +43,7 @@ public class BeanDefinitionTestV2 {
 
             Assert.assertNotNull(pv);
 
-            Assert.assertTrue(pv.getValue() instanceof RuntimeBeanReference);
+            Assert.assertTrue(pv instanceof RuntimeBeanReferencePropertyValue);
         }
 
         {
@@ -49,7 +51,7 @@ public class BeanDefinitionTestV2 {
 
             Assert.assertNotNull(pv);
 
-            Assert.assertTrue(pv.getValue() instanceof TypedStringValue);
+            Assert.assertTrue(pv instanceof TypedStringPropertyValue);
         }
 
         {
@@ -57,7 +59,7 @@ public class BeanDefinitionTestV2 {
 
             Assert.assertNotNull(pv);
 
-            Assert.assertTrue(pv.getValue() instanceof TypedStringValue);
+            Assert.assertTrue(pv instanceof TypedStringPropertyValue);
         }
 
     }

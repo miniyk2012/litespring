@@ -1,29 +1,18 @@
 package org.litespring.beans;
 
 
+import org.litespring.beans.factory.BeanFactory;
+
 /**
  * Created by thomas_young on 26/6/2018.
  */
-public class PropertyValue {
+public abstract class PropertyValue {
     private String name;
-    private Object value;
-    private Object convertedValue;
-    private boolean isConverted;
+    private String value;
 
-    public Object getConvertedValue() {
-        return convertedValue;
-    }
+    public abstract Object resolve(BeanFactory factory);
 
-    public void setConvertedValue(Object convertedValue) {
-        this.convertedValue = true;
-        this.convertedValue = convertedValue;
-    }
-
-    public boolean isConverted() {
-        return isConverted;
-    }
-
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -35,7 +24,12 @@ public class PropertyValue {
         this.name = name;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public PropertyValue(String name, String value) {
+        this.name = name;
         this.value = value;
     }
 }
