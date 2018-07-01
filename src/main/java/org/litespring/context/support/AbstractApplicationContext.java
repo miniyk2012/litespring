@@ -19,6 +19,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 		factory.setBeanClassLoader(this.getBeanClassLoader());
 	}
 	
+	@Override
 	public Object getBean(String beanID) {
 		
 		return factory.getBean(beanID);
@@ -26,11 +27,13 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 	
 	protected abstract Resource getResourceByPath(String path);
 	
+	@Override
 	public void setBeanClassLoader(ClassLoader beanClassLoader) {
 		this.beanClassLoader = beanClassLoader;
 	}
 
-    public ClassLoader getBeanClassLoader() {
+    @Override
+	public ClassLoader getBeanClassLoader() {
 		return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
 	}
 

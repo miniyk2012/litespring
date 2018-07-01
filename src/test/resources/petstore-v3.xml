@@ -5,8 +5,8 @@
 
     <bean id="petStore"
           class="org.litespring.service.v3.PetStoreService" >
-        <constructor-arg  ref="accountDao"/>
         <constructor-arg  ref="itemDao"/>
+        <constructor-arg  ref="accountDao"/>
         <constructor-arg  value="1"/>
     </bean>
 

@@ -35,9 +35,9 @@ public class BeanDefinitionTestV3 {
         Assert.assertEquals(3, valueHolders.size());
 
         RuntimeBeanReference ref1 = (RuntimeBeanReference)valueHolders.get(0).getValue();
-        Assert.assertEquals("accountDao", ref1.getBeanName());
+        Assert.assertEquals("itemDao", ref1.getBeanName());
         RuntimeBeanReference ref2 = (RuntimeBeanReference)valueHolders.get(1).getValue();
-        Assert.assertEquals("itemDao", ref2.getBeanName());
+        Assert.assertEquals("accountDao", ref2.getBeanName());
 
         TypedStringValue strValue = (TypedStringValue)valueHolders.get(2).getValue();
         Assert.assertEquals( "1", strValue.getValue());

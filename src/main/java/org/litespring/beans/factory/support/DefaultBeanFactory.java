@@ -26,14 +26,17 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 		
 	}
 
-	public void registerBeanDefinition(String beanID,BeanDefinition bd){
+	@Override
+	public void registerBeanDefinition(String beanID, BeanDefinition bd){
 		this.beanDefinitionMap.put(beanID, bd);
 	}
+	@Override
 	public BeanDefinition getBeanDefinition(String beanID) {
 			
 		return this.beanDefinitionMap.get(beanID);
 	}
 
+	@Override
 	public Object getBean(String beanID) {
 		BeanDefinition bd = this.getBeanDefinition(beanID);
 		if(bd == null){
@@ -55,20 +58,19 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 		Object bean = instantiateBean(bd);
 		//设置属性
 		populateBean(bd, bean);
-		
-		return bean;		
+		return bean;
 		
 	}
+
 	private Object instantiateBean(BeanDefinition bd) {
-		ClassLoader cl = this.getBeanClassLoader();
-		String beanClassName = bd.getBeanClassName();
+        ConstructorResolver resolver = new ConstructorResolver(this);
 		try {
-			Class<?> clz = cl.loadClass(beanClassName);
-			return clz.newInstance();
+			return resolver.autowireConstructor(bd);
 		} catch (Exception e) {			
-			throw new BeanCreationException("create bean for "+ beanClassName +" failed",e);
+			throw new BeanCreationException("create bean for "+ bd.getBeanClassName() +" failed",e);
 		}	
 	}
+
 	protected void populateBean(BeanDefinition bd, Object bean){
 		List<PropertyValue> pvs = bd.getPropertyValues();
 		
@@ -93,7 +95,6 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 						break;
 					}
 				}
- 
 				
 			}
 		}catch(Exception ex){
@@ -101,11 +102,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 		}	
 	}
 
+	@Override
 	public void setBeanClassLoader(ClassLoader beanClassLoader) {
 		this.beanClassLoader = beanClassLoader;
 	}
 
-    public ClassLoader getBeanClassLoader() {
+    @Override
+	public ClassLoader getBeanClassLoader() {
 		return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
 	}
 }

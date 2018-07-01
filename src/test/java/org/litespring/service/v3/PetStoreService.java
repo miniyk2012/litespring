@@ -17,11 +17,19 @@ public class PetStoreService {
         this.itemDao = itemDao;
         this.version = -1;
     }
+
     public PetStoreService(AccountDao accountDao, ItemDao itemDao,int version){
         this.accountDao = accountDao;
         this.itemDao = itemDao;
         this.version = version;
     }
+
+    public PetStoreService(ItemDao itemDao, AccountDao accountDao, int version){
+        this.accountDao = accountDao;
+        this.itemDao = itemDao;
+        this.version = version;
+    }
+
     public int getVersion() {
         return version;
     }
